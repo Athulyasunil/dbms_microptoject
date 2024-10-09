@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Get all subjects
 router.get('/', (req, res) => {
-    db.query('SELECT * FROM student', (err, data) => {
+    db.query('SELECT * FROM users', (err, data) => {
         if (err) return res.status(500).json(err);
         return res.status(200).json(data);
     });
