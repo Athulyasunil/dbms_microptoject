@@ -1,18 +1,20 @@
 const mysql = require('mysql2');
 
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'athulyA@879?',
-    database: 'dbms_microproject'
-  });
+// Create a single MySQL connection
+const connection = mysql.createConnection({
+  host: 'localhost',   // Replace with your MySQL host
+  user: 'root',        // Replace with your MySQL username
+  password: 'athulyA@879?',// Replace with your MySQL password
+  database: 'dbms_microproject' // Replace with your database name
+});
 
-db.connect((err) => {
-    if (err) {
-      console.error('Error connecting to the database:', err);
-      return;
-    }
-    console.log('Connected to the database');
-  });
+// Connect to the MySQL database
+connection.connect((err) => {
+  if (err) {
+    console.error('Error connecting to the database:', err.stack);
+    return;
+  }
+  console.log('Connected to MySQL as id ' + connection.threadId);
+});
 
-  module.exports = db;
+module.exports = connection;

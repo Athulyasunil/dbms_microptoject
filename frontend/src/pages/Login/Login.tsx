@@ -1,17 +1,18 @@
-import './Login.css'
+import './Login.css';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
-    // State to store username, password, and errors
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
+    const navigate = useNavigate();
 
-    // Handle form submit
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError(null); // Clear previous errors
+        setError(null);
+        setSuccess(null);
 
         if (!username || !password) {
             setError('Both username and password are required.');
@@ -30,12 +31,19 @@ const Login: React.FC = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Login success
                 setSuccess(data.message);
                 setError(null);
-                console.log('Logged in user:', data.user); // You can redirect or do other actions after a successful login
+                console.log('Logged in user:', data.user);
+
+                // Route to student or faculty based on the user role
+                if (data.user.role === 'student') {
+                    // Navigate to the student page using rollno
+                    navigate(`/student/${data.user.rollno}`);
+                } else if (data.user.role === 'faculty') {
+                    // Navigate to the faculty page using fid
+                    navigate(`/faculty/${data.user.fid}/classes`);
+                }
             } else {
-                // Login failed
                 setError(data.message);
             }
         } catch (err) {

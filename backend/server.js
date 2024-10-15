@@ -6,7 +6,7 @@ const mysql = require('mysql2');
 const db = require('./db');
 const timetableRoutes = require('./controllers/timetable');
 const studentRoutes = require('./controllers/student');
-const subjecttRoutes = require('./controllers/subject');
+const getRoutes = require('./controllers/get');
 const facultyRoutes = require('./controllers/faculty');
 const adminRoutes = require('./controllers/admin');
 const loginRoutes = require('./controllers/login');
@@ -27,7 +27,7 @@ app.use('/timetable', timetableRoutes);
 app.use('/admin', adminRoutes);
 app.use('/login', loginRoutes);
 app.use('/users', usersRoutes);
-app.use('/subject', subjecttRoutes);
+app.use('/get', getRoutes);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

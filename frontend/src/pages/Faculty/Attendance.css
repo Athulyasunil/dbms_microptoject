@@ -1,0 +1,75 @@
+/* src/components/Attendance.css */
+.container{
+    height: 100vh;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+.attendance-container {
+    margin-top: 20px;
+}
+
+.student-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.student-name {
+    flex: 1;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+.attendance-label {
+    margin-left: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Radio buttons hidden for custom labels */
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + label.present {
+    color: green;
+    font-weight: bold;
+}
+
+input[type="radio"]:checked + label.absent {
+    color: red;
+    font-weight: bold;
+}
+
+.present, .absent {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.present:hover {
+    background-color: rgba(0, 255, 0, 0.1);
+    border-color: green;
+}
+
+.absent:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+    border-color: red;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
