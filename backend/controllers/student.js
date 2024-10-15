@@ -2,6 +2,30 @@ const db = require('../db');
 const express = require("express");
 const router = express.Router();
 
+// Get student profile by roll number
+router.get('/profile/:rollno', (req, res) => {
+    const rollno = req.params.rollno;
+    console.log(`Fetching profile for rollno: ${rollno}`); // Log the roll number being queried
+    const query = 'SELECT * FROM STUDENT WHERE rollno = ?';
+
+    db.query(query, [rollno], (error, results) => {
+        if (error) {
+            console.error("Database query error:", error);
+            return res.status(500).json({ error: 'Database query failed' });
+        }
+
+        console.log("Query Results:", results); // Log the results returned from the database
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        const studentProfile = results[0];
+        res.status(200).json(studentProfile);
+    });
+});
+
+
 // Get subjects and attendance
 router.get('/:rollno/subjects', (req, res) => {
     const rollno = req.params.rollno;
@@ -24,17 +48,19 @@ router.get('/:rollno/subjects', (req, res) => {
     `;
 
     db.query(query, [rollno, rollno], (err, results) => {
-        if (err) return res.status(500).json({ message: "Database error", error: err });
+        if (err) {
+            console.error("Database query error:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
         res.status(200).json(results);
     });
 });
 
-//calendar
-
+// Get calendar attendance
 router.get('/:rollno/calendar', (req, res) => {
     const rollno = req.params.rollno;
-    const year = parseInt(req.query.year);
-    const month = parseInt(req.query.month);
+    const year = parseInt(req.query.year, 10);
+    const month = parseInt(req.query.month, 10);
 
     // Validate year and month
     if (!year || isNaN(year) || !month || isNaN(month) || month < 1 || month > 12) {
@@ -62,7 +88,10 @@ router.get('/:rollno/calendar', (req, res) => {
     `;
 
     db.query(query, [rollno, startDate, endDate], (err, results) => {
-        if (err) return res.status(500).json({ message: "Database error", error: err });
+        if (err) {
+            console.error("Database query error:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
         res.status(200).json(results);
     });
 });

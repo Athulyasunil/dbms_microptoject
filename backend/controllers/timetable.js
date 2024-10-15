@@ -2,55 +2,62 @@ const db = require('../db');
 const express = require("express");
 const router = express.Router();
 
+// Get timetable by class ID
+router.get('/:classId', (req, res) => {
+    const classId = req.params.classId;
 
-// Get student timetable by roll number
-router.get('/:rollno/timetable', (req, res) => {
-    const rollno = req.params.rollno;
-    const q = `
+    const query = `
         SELECT 
             t.day_of_week,
-            t.start_time,
-            t.end_time,
             t.period_no,
             s.subname AS subject_name,
             f.name AS faculty_name
-        FROM
-            student st
-        JOIN
-            class c ON st.cid = c.cid
-        JOIN
-            subject s ON s.cid = c.cid
-        JOIN
-            timetable t ON t.cid = c.cid
-        JOIN
+        FROM 
+            timetable t
+        JOIN 
+            subject s ON t.sub_id = s.sid
+        JOIN 
             faculty f ON s.fid = f.fid
-        WHERE
-            st.rollno = ?
+        WHERE 
+            t.cid = ?
         ORDER BY 
-            t.day_of_week, t.period_no;
+            FIELD(t.day_of_week, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'), 
+            t.period_no;
     `;
 
-    db.query(q, [rollno], (err, data) => {
-        if (err) return res.status(500).json(err);
+    db.query(query, [classId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
         
-        // Format the response
-        const timetable = {};
-        
-        data.forEach(entry => {
-            const day = entry.day_of_week;
-            const timeRange = `${entry.start_time} - ${entry.end_time}`;
-            const periodDetails = `Period No ${entry.period_no}: ${entry.subject_name} (Faculty: ${entry.faculty_name})`;
-            
-            if (!timetable[day]) {
-                timetable[day] = [];
-            }
-            timetable[day].push(`${timeRange} - ${periodDetails}`);
+        // Check if any timetable entries were found
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No timetable entries found for this class." });
+        }
+
+        // Restructure data into grid format
+        const timetableGrid = {};
+        const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+        // Initialize grid with empty arrays
+        daysOfWeek.forEach(day => {
+            timetableGrid[day] = new Array(7).fill(null); // Assuming a maximum of 10 periods
         });
 
-        // Send formatted timetable
-        return res.status(200).json(timetable);
+        // Fill the grid with the data
+        results.forEach(entry => {
+            const { day_of_week, period_no, subject_name, faculty_name } = entry;
+            const periodIndex = period_no - 1; // Adjust for 0-indexed array
+            timetableGrid[day_of_week][periodIndex] = `${subject_name} (Faculty: ${faculty_name})`;
+        });
+
+        // Send the formatted timetable grid as a response
+        res.status(200).json(timetableGrid);
     });
 });
+
+module.exports = router;
+
 
 // Admin adds timetable
 router.post('/add', (req, res) => {

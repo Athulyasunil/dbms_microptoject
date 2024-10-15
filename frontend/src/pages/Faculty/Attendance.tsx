@@ -1,18 +1,15 @@
-// src/components/Attendance.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getClassData } from './shareddata'; // Import the shared file
 
 const Attendance: React.FC = () => {
-    const { classId } = useParams<{ classId: string }>();
-    const { subname, subjectID } = getClassData(); // Get the shared class data
-
+    const { classId, subjectId } = useParams<{ classId: string; subjectId: string }>();
     const [students, setStudents] = useState<{ rollno: number; name: string }[]>([]);
     const [attendance, setAttendance] = useState<{ rollno: number; status: 'Present' | 'Absent' }[]>([]);
     const [date, setDate] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [success, setSuccess] = useState<string | null>(null);
+
     useEffect(() => {
         const fetchClassData = async () => {
             setLoading(true);
@@ -48,7 +45,7 @@ const Attendance: React.FC = () => {
     };
     
     const submitAttendance = async () => {
-        if (!subjectID) {
+        if (!subjectId) {
             setError('No subject found for this class.');
             return;
         }
@@ -57,7 +54,7 @@ const Attendance: React.FC = () => {
         setError(null);
         setSuccess(null);
         try {
-            const response = await fetch(`http://localhost:5000/faculty/${classId}/${subjectID}/attendance`, {
+            const response = await fetch(`http://localhost:5000/faculty/${classId}/${subjectId}/attendance`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ date, attendance }),
@@ -82,7 +79,7 @@ const Attendance: React.FC = () => {
     return (
         <div className='container'>
             {/* Display the subject name in the heading */}
-            <h1>Mark Attendance for Class {classId} - Subject {subname}</h1>
+            <h1>Mark Attendance for Class {classId} - Subject </h1>
             {error && <div className="error">{error}</div>}
             {success && <div className="success">{success}</div>}
 

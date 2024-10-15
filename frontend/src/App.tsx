@@ -13,11 +13,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/student" element={<Student />} />
+        <Route path="/student/:rollno" element={<Student />} />
         <Route path="/faculty/:fid/classes" element={<ClassList />} /> {/* Dynamic route for classes taught by faculty */}
         //<Route path="/faculty/:fid/classes/:classId/attendance" element={<Attendance />} /> {/* Dynamic route for attendance */}
         <Route path="/faculty/:fid/classes/:classId/subjects/:subjectId/attendance" element={<Attendance/>} />
         <Route path="/admin" element={<Admin />} />
+       {/* <Route path = '/timetable/:classId' element = {<Timetable />}/>*/}
       </Routes>
     </Router>
   );
