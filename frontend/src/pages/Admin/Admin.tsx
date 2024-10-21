@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Admin.css';
 
-// Define types for user details, user, class, and department
 interface UserDetails {
   email: string;
   phone_no: string;
@@ -34,6 +33,7 @@ const Admin: React.FC = () => {
   const [classes, setClasses] = useState<Class[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [showAddUserForm, setShowAddUserForm] = useState<boolean>(false);
+  const [selectedSection, setSelectedSection] = useState<string>('Users');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [role, setRole] = useState<string>('student');
@@ -83,7 +83,7 @@ const Admin: React.FC = () => {
       await axios.post('http://localhost:5000/admin/add', body);
       fetchUsers();
       alert('User added successfully');
-      setShowAddUserForm(false); // Hide the form after adding
+      setShowAddUserForm(false);
     } catch (error) {
       console.error('Error adding user', error);
       alert('Failed to add user');
@@ -124,168 +124,193 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Admin Dashboard</h1>
+    <div className="admin-container">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <h2>Admin Menu</h2>
+        <ul>
+          <li onClick={() => setSelectedSection('Users')} className={selectedSection === 'Users' ? 'active' : ''}>
+            Manage Users
+          </li>
+          <li onClick={() => setSelectedSection('Classes')} className={selectedSection === 'Classes' ? 'active' : ''}>
+            Manage Classes
+          </li>
+          <li onClick={() => setSelectedSection('Departments')} className={selectedSection === 'Departments' ? 'active' : ''}>
+            Manage Departments
+          </li>
+        </ul>
+      </div>
 
-      {/* Display Users */}
-      <h2>Users List</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>User ID</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.userid}>
-              <td>{user.userid}</td>
-              <td>{user.username}</td>
-              <td>{user.role}</td>
-              <td>
-                <button onClick={() => handleDeleteUser(user.userid)}>Delete User</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Main Content */}
+      <div className="main-content">
+        <h1>Admin Dashboard</h1>
 
-      {/* Display Classes */}
-      <h2>Classes List</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Class ID</th>
-            <th>Class Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {classes.map((cls) => (
-            <tr key={cls.cid}>
-              <td>{cls.cid}</td>
-              <td>{cls.classname}</td>
-              <td>
-                <button onClick={() => handleDeleteClass(cls.cid)}>Delete Class</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        {selectedSection === 'Users' && (
+          <>
+            <h2>Users List</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.userid}>
+                    <td>{user.userid}</td>
+                    <td>{user.username}</td>
+                    <td>{user.role}</td>
+                    <td>
+                      <button onClick={() => handleDeleteUser(user.userid)}>Delete User</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button onClick={() => setShowAddUserForm(true)}>Add User</button>
 
-      {/* Display Departments */}
-      <h2>Departments List</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Department ID</th>
-            <th>Department Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {departments.map((dept) => (
-            <tr key={dept.department_id}>
-              <td>{dept.department_id}</td>
-              <td>{dept.name}</td>
-              <td>
-                <button onClick={() => handleDeleteDepartment(dept.department_id)}>Delete Department</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Add User Button */}
-      {!showAddUserForm && (
-        <button onClick={() => setShowAddUserForm(true)}>Add User</button>
-      )}
-
-      {/* Conditionally show the form for adding users */}
-      {showAddUserForm && (
-        <div>
-          <h2>Add New User</h2>
-          <form onSubmit={handleAddUser}>
-            <label>
-              Username:
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
-            </label>
-            <label>
-              Password:
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            </label>
-            <label>
-              Role:
-              <select value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="student">Student</option>
-                <option value="faculty">Faculty</option>
-                <option value="admin">Admin</option>
-              </select>
-            </label>
-
-            {/* Conditionally show additional fields if the role is not "admin" */}
-            {role !== 'admin' && (
-              <>
-                <label>
-                  Email:
-                  <input type="email" value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} />
-                </label>
-                <label>
-                  Phone Number:
-                  <input type="text" value={details.phone_no} onChange={(e) => setDetails({ ...details, phone_no: e.target.value })} />
-                </label>
-                <label>
-                  Department:
-                  <select value={details.department_id} onChange={(e) => setDetails({ ...details, department_id: Number(e.target.value) })}>
-                    <option value="">Select Department</option>
-                    {departments.map((dept) => (
-                      <option key={dept.department_id} value={dept.department_id}>
-                        {dept.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                {role === 'student' && (
-                  <>
+            {/* Add User Modal */}
+            {showAddUserForm && (
+              <div className="modal-backdrop">
+                <div className="modal-content">
+                  <h2>Add New User</h2>
+                  <form className="modal-form"onSubmit={handleAddUser}>
                     <label>
-                      Roll No:
-                      <input type="number" value={details.rollno} onChange={(e) => setDetails({ ...details, rollno: Number(e.target.value) })} />
+                      Username:
+                      <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
                     </label>
                     <label>
-                      Class:
-                      <select value={details.cid} onChange={(e) => setDetails({ ...details, cid: Number(e.target.value) })}>
-                        <option value="">Select Class</option>
-                        {classes.map((cls) => (
-                          <option key={cls.cid} value={cls.cid}>
-                            {cls.classname}
-                          </option>
-                        ))}
+                      Password:
+                      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                    </label>
+                    <label>
+                      Role:
+                      <select value={role} onChange={(e) => setRole(e.target.value)}>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                        <option value="admin">Admin</option>
                       </select>
                     </label>
-                    <label>
-                      Name:
-                      <input type="text" value={details.name} onChange={(e) => setDetails({ ...details, name: e.target.value })} />
-                    </label>
-                  </>
-                )}
 
-                {role === 'faculty' && (
-                  <label>
-                    Faculty ID:
-                    <input type="number" value={details.fid || ''} onChange={(e) => setDetails({ ...details, fid: e.target.value ? Number(e.target.value) : undefined })} />
-                  </label>
-                )}
-              </>
+                    {role !== 'admin' && (
+                      <>
+                        <label>
+                          Email:
+                          <input type="email" value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} />
+                        </label>
+                        <label>
+                          Phone Number:
+                          <input type="text" value={details.phone_no} onChange={(e) => setDetails({ ...details, phone_no: e.target.value })} />
+                        </label>
+                        <label>
+                          Department:
+                          <select value={details.department_id} onChange={(e) => setDetails({ ...details, department_id: Number(e.target.value) })}>
+                            <option value="">Select Department</option>
+                            {departments.map((dept) => (
+                              <option key={dept.department_id} value={dept.department_id}>
+                                {dept.name}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+
+                        {role === 'student' && (
+                          <>
+                            <label>
+                              Roll No:
+                              <input type="number" value={details.rollno} onChange={(e) => setDetails({ ...details, rollno: Number(e.target.value) })} />
+                            </label>
+                            <label>
+                              Class:
+                              <select value={details.cid} onChange={(e) => setDetails({ ...details, cid: Number(e.target.value) })}>
+                                <option value="">Select Class</option>
+                                {classes.map((cls) => (
+                                  <option key={cls.cid} value={cls.cid}>
+                                    {cls.classname}
+                                  </option>
+                                ))}
+                              </select>
+                            </label>
+                            <label>
+                              Name:
+                              <input type="text" value={details.name} onChange={(e) => setDetails({ ...details, name: e.target.value })} />
+                            </label>
+                          </>
+                        )}
+
+                        {role === 'faculty' && (
+                          <label>
+                            Faculty ID:
+                            <input type="number" value={details.fid || ''} onChange={(e) => setDetails({ ...details, fid: e.target.value ? Number(e.target.value) : undefined })} />
+                          </label>
+                        )}
+                      </>
+                    )}
+
+                    <button type="submit">Add User</button>
+                    <button type="button" onClick={() => setShowAddUserForm(false)}>Cancel</button>
+                  </form>
+                </div>
+              </div>
             )}
+          </>
+        )}
 
-            <button type="submit">Add User</button>
-          </form>
-          <button onClick={() => setShowAddUserForm(false)}>Cancel</button>
-        </div>
-      )}
+        {selectedSection === 'Classes' && (
+          <>
+            <h2>Classes List</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Class ID</th>
+                  <th>Class Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {classes.map((cls) => (
+                  <tr key={cls.cid}>
+                    <td>{cls.cid}</td>
+                    <td>{cls.classname}</td>
+                    <td>
+                      <button onClick={() => handleDeleteClass(cls.cid)}>Delete Class</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+
+        {selectedSection === 'Departments' && (
+          <>
+            <h2>Departments List</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Department ID</th>
+                  <th>Department Name</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {departments.map((dept) => (
+                  <tr key={dept.department_id}>
+                    <td>{dept.department_id}</td>
+                    <td>{dept.name}</td>
+                    <td>
+                      <button onClick={() => handleDeleteDepartment(dept.department_id)}>Delete Department</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        )}
+      </div>
     </div>
   );
 };

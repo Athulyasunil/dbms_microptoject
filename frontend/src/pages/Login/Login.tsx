@@ -43,6 +43,10 @@ const Login: React.FC = () => {
                     // Navigate to the faculty page using fid
                     navigate(`/faculty/${data.user.fid}/classes`);
                 }
+                else if (data.user.role === 'admin') {
+                    // Navigate to the admin page
+                    navigate(`/admin`);
+                }
             } else {
                 setError(data.message);
             }
@@ -59,27 +63,29 @@ const Login: React.FC = () => {
                 {error && <p className="error-message">{error}</p>}
                 {success && <p className="success-message">{success}</p>}
                 <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                    <div className="form-group-login">
                         <input
                             type="text"
                             id="username"
+                            placeholder='Username'
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
                         />
                     </div>
                     <div className="form-group">
-                        <label htmlFor="password">Password</label>
                         <input
                             type="password"
                             id="password"
+                            placeholder='Password'
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </div>
-                    <button type="submit">Login</button>
+                    <div className='button-border'>
+                        <button className='login-btn' type="submit">Login</button>
+                    </div>
                 </form>
             </div>
         </section>

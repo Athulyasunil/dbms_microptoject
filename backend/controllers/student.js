@@ -26,7 +26,6 @@ router.get('/profile/:rollno', (req, res) => {
 });
 
 
-// Get subjects and attendance
 router.get('/:rollno/subjects', (req, res) => {
     const rollno = req.params.rollno;
 
@@ -36,7 +35,7 @@ router.get('/:rollno/subjects', (req, res) => {
             s.subname, 
             COUNT(a.status) AS total_classes,
             SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) AS present_classes,
-            (SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) / COUNT(a.status) * 100) AS attendance_percentage
+            (SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) / NULLIF(COUNT(a.status), 0) * 100) AS attendance_percentage
         FROM 
             subject s
         LEFT JOIN 
@@ -52,17 +51,25 @@ router.get('/:rollno/subjects', (req, res) => {
             console.error("Database query error:", err);
             return res.status(500).json({ message: "Database error", error: err });
         }
-        res.status(200).json(results);
+
+        // Convert attendance_percentage to string in the results
+        const formattedResults = results.map(item => ({
+            ...item,
+            attendance_percentage: item.attendance_percentage.toString() // Convert to string here
+        }));
+
+        console.log("Query Results:", formattedResults); // Log the formatted results
+        res.status(200).json(formattedResults);
     });
 });
 
-// Get calendar attendance
-router.get('/:rollno/calendar', (req, res) => {
+// Get monthly attendance data
+router.get('/:rollno/monthly-attendance', (req, res) => {
     const rollno = req.params.rollno;
-    const year = parseInt(req.query.year, 10);
-    const month = parseInt(req.query.month, 10);
+    const year = parseInt(req.query.year, 10);  // Parsing year
+    const month = parseInt(req.query.month, 10); // Parsing month
 
-    // Validate year and month
+    // Validate year and month after parsing
     if (!year || isNaN(year) || !month || isNaN(month) || month < 1 || month > 12) {
         return res.status(400).json({ message: "Invalid year or month." });
     }
@@ -72,19 +79,21 @@ router.get('/:rollno/calendar', (req, res) => {
 
     const query = `
         SELECT 
-            a.att_date, 
-            a.status, 
-            s.subname 
+            a.att_date,
+            SUM(CASE WHEN a.status = 'Present' THEN 1 ELSE 0 END) AS present_count,
+            SUM(CASE WHEN a.status = 'Absent' THEN 1 ELSE 0 END) AS absent_count
         FROM 
             attendance a 
-        JOIN 
-            subject s ON a.sub_id = s.sid 
         JOIN 
             student st ON a.rollno = st.rollno 
         WHERE 
             st.rollno = ? 
             AND a.att_date >= ? 
             AND a.att_date < ?
+        GROUP BY 
+            a.att_date
+        ORDER BY 
+            a.att_date;
     `;
 
     db.query(query, [rollno, startDate, endDate], (err, results) => {
@@ -95,5 +104,42 @@ router.get('/:rollno/calendar', (req, res) => {
         res.status(200).json(results);
     });
 });
+
+
+
+// Get calendar attendance for a specific date
+router.get('/:rollno/calendar', (req, res) => {
+    const rollno = req.params.rollno;
+    const date = req.query.date; // Accepting date as a query parameter
+
+    // Validate date
+    if (!date) {
+        return res.status(400).json({ message: "Invalid date." });
+    }
+
+    const query = `
+        SELECT  
+            a.status, 
+            s.subname 
+        FROM 
+            attendance a 
+        JOIN 
+            subject s ON a.sub_id = s.sid 
+        JOIN 
+            student st ON a.rollno = st.rollno 
+        WHERE 
+            st.rollno = ? 
+            AND a.att_date = ?
+    `;
+
+    db.query(query, [rollno, date], (err, results) => {
+        if (err) {
+            console.error("Database query error:", err);
+            return res.status(500).json({ message: "Database error", error: err });
+        }
+        res.status(200).json(results); // Returning detailed attendance for the specific date
+    });
+});
+
 
 module.exports = router;

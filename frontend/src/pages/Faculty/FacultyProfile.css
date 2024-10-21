@@ -1,0 +1,118 @@
+/* General Styles */
+.faculty-profile {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f6f9;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin-top: 20px;
+}
+
+h3, h4 {
+    color: #555;
+}
+
+/* Faculty Profile Styles */
+.faculty-profile {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.faculty-profile div {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #666;
+}
+
+/* Class Card Styles */
+.class-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 10px auto;
+    max-width: 600px;
+    text-align: center;
+}
+
+.class-card h3 {
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.class-card h4 {
+    margin: 5px 0;
+    font-size: 18px;
+    color: #888;
+}
+
+button {
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3700b3;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .faculty-profile, .class-card {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    h4 {
+        font-size: 16px;
+    }
+
+    button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .faculty-profile, .class-card {
+        margin: 5px;
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    h4 {
+        font-size: 14px;
+    }
+
+    button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+}

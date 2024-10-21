@@ -1,0 +1,129 @@
+.calendar-attendance-grid {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f0f0f0; /* Light grey background */
+    border-radius: 8px; /* Optional: Add some border radius for aesthetics */
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.error {
+    color: red;
+    text-align: center;
+}
+
+.attendance-details {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+.dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row; /* Ensure dots are in a row */
+}
+
+.dot {
+    height: 5px; /* Increased size for visibility */
+    width: 5px; /* Increased size for visibility */
+    border-radius: 50%;
+    margin: 0 4px; /* Increased margin between dots */
+}
+
+.dot.present {
+    background-color: green;
+}
+
+.dot.absent {
+    background-color: red;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 5px 0;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    .calendar-attendance-grid {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .attendance-details {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 400px) {
+    .dot {
+        height: 8px;
+        width: 8px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .attendance-details {
+        font-size: 12px;
+    }
+}
+
+/* Calendar styles */
+.react-calendar {
+    width: 100%; /* Set calendar width to 100% */
+    max-width: 800px; /* Optional: Set a max width */
+    background-color: #d9d9d9; /* Light grey background for the calendar */
+    border-radius: 8px; /* Rounded corners for the calendar */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+.react-calendar__month-view__days__day {
+    height: 70px; /* Increase the height of each day cell */
+    width: 70px; /* Increase the width of each day cell */
+    color: #000000; /* Dark text color for better contrast */
+}
+
+.react-calendar__tile {
+    background-color: #e4dbdb; /* Light grey background for each tile */
+    color: #000000; /* Dark text color for each tile */
+}
+
+.react-calendar__tile--active {
+    background-color: #000000; /* Darker grey for the active tile */
+    color: rgb(255, 255, 255); /* White text for the active tile */
+}
+
+.react-calendar__tile--now {
+    background-color: #3c4086; /* Different background color for today's date */
+}
+
+.react-calendar__navigation {
+    height: 60px; /* Adjust height for the navigation */
+    background-color: #d9d9d9; /* Match navigation bar with calendar background */
+    color: #333; /* Dark text color for navigation */
+}
+
+
+/* Make the calendar headers black */
+.react-calendar__month-view__weekdays__weekday abbr {
+    color: #000000; /* Black color for weekday names (e.g., Mon, Tue) */
+}
+
+.react-calendar__navigation button {
+    color: #000000; /* Black color for month/year navigation buttons */
+}

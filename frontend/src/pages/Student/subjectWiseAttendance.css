@@ -1,0 +1,80 @@
+.attendance-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+    background-color: #f8f9f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+    text-align: center;
+    font-size: 18px;
+    color: #555;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    font-size: 16px;
+}
+
+.subjects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.subject-card {
+    display: flex; /* Use Flexbox for row layout */
+    flex-direction: column; /* Stack elements vertically */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fff;
+    transition: box-shadow 0.3s;
+}
+
+.subject-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.subject-info {
+    display: flex; /* Flexbox for the subject info */
+    justify-content: space-between; /* Space out the child elements */
+    width: 100%; /* Make it take full width */
+}
+
+.subject-name {
+    flex: 1; /* Allow the subject name to take available space */
+    margin: 0; /* Remove default margin */
+}
+
+.attendance-details,
+.attendance-percentage {
+    border-left: 1px solid #ddd; /* Add left border */
+    padding-left: 10px; /* Padding to separate from the border */
+    margin: 0; /* Remove default margin */
+}
+
+.attendance-percentage {
+    font-weight: bold; /* Make the attendance percentage bold */
+}
+h2{
+    padding-bottom: 40px;
+}
+.attendance-bar {
+    width: 100%;
+    height: 10px; /* Height of the attendance bar */
+    background-color: #e0e0e0; /* Light gray background for the bar */
+    border-radius: 5px; /* Rounded corners */
+    margin-top: 10px; /* Space above the bar */
+    overflow: hidden; /* Ensure children don't overflow */
+}
+
+.attendance-fill {
+    height: 100%; /* Full height of the attendance bar */
+    border-radius: 5px; /* Rounded corners */
+    transition: background 0.5s ease; /* Smooth transition for the fill */
+}
+

@@ -1,0 +1,63 @@
+/* Student page styles */
+.student-page {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+    padding: 20px; /* Add padding around the page */
+    background-color: #f0f0f0; /* Light background color for the entire page */
+    min-height: 100vh; /* Ensure the page takes at least the full viewport height */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+/* Container for each section */
+.student-container {
+    width: 90%; /* Width of the container */
+    max-width: 800px; /* Maximum width to keep it manageable */
+    margin-bottom: 20px; /* Spacing between sections */
+    padding: 20px; /* Padding inside the containers */
+    background-color: #fff; /* White background for sections */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation effect */
+}
+
+/* Optional: Styles for loading and error messages */
+.loading,
+.error {
+    text-align: center; /* Center loading and error messages */
+    width: 100%; /* Make them take full width */
+    padding: 20px; /* Add some padding */
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Styling for loading message */
+.loading {
+    font-size: 20px; /* Larger font size for loading message */
+    color: #555; /* Gray color for the loading message */
+}
+
+/* Styling for error message */
+.error {
+    color: red; /* Red color for error message */
+    font-weight: bold; /* Bold text for emphasis */
+}
+
+/* Headings */
+h2, h3 {
+    text-align: center; /* Center the headings */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    .student-page {
+        padding: 10px; /* Reduce padding on smaller screens */
+    }
+
+    .student-container {
+        width: 100%; /* Full width for smaller screens */
+        padding: 15px; /* Adjust padding */
+    }
+
+    h2, h3 {
+        font-size: 1.5em; /* Adjust font size for headings */
+    }
+}

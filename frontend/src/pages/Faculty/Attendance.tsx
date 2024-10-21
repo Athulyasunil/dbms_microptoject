@@ -1,52 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import './Attendance.css';
 
 const Attendance: React.FC = () => {
     const { classId, subjectId } = useParams<{ classId: string; subjectId: string }>();
+    const [searchParams] = useSearchParams();
+    const subname = searchParams.get('subname');
+
     const [students, setStudents] = useState<{ rollno: number; name: string }[]>([]);
     const [attendance, setAttendance] = useState<{ rollno: number; status: 'Present' | 'Absent' }[]>([]);
     const [date, setDate] = useState<string>('');
-    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
 
     useEffect(() => {
-        const fetchClassData = async () => {
+        const fetchStudents = async () => {
             setLoading(true);
             try {
-                const studentResponse = await fetch(`http://localhost:5000/faculty/students/${classId}`);
-                if (!studentResponse.ok) {
-                    throw new Error('Failed to fetch students');
+                const response = await fetch(`http://localhost:5000/faculty/students/${classId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch students.');
                 }
-                const studentData = await studentResponse.json();
-                setStudents(studentData.students);
+                const data = await response.json();
+                setStudents(data.students);
             } catch (err: unknown) {
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError('An unknown error occurred.');
-                }
+                setError(err instanceof Error ? err.message : 'An unknown error occurred.');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchClassData();
+        fetchStudents();
     }, [classId]);
 
     const handleAttendanceChange = (rollno: number, status: 'Present' | 'Absent') => {
-        setAttendance(prev => {
-            const existingRecord = prev.find(record => record.rollno === rollno);
+        setAttendance((prev) => {
+            const existingRecord = prev.find((record) => record.rollno === rollno);
             if (existingRecord) {
-                return prev.map(record => record.rollno === rollno ? { ...record, status } : record);
+                return prev.map((record) => (record.rollno === rollno ? { ...record, status } : record));
             }
             return [...prev, { rollno, status }];
         });
     };
-    
+
     const submitAttendance = async () => {
-        if (!subjectId) {
-            setError('No subject found for this class.');
+        if (!date) {
+            setError('Please select a date.');
             return;
         }
 
@@ -54,71 +54,87 @@ const Attendance: React.FC = () => {
         setError(null);
         setSuccess(null);
         try {
+            console.log({ date, attendance });
             const response = await fetch(`http://localhost:5000/faculty/${classId}/${subjectId}/attendance`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ date, attendance }),
             });
-
+            console.log(JSON.stringify({date, attendance}));
             if (!response.ok) {
-                throw new Error('Failed to submit attendance');
+                throw new Error('Failed to submit attendance.');
             }
 
-            setSuccess('Attendance submitted successfully!');
+            setSuccess('Attendance recorded successfully!');
         } catch (err: unknown) {
-            if (err instanceof Error) {
-                setError(err.message);
-            } else {
-                setError('An unknown error occurred.');
-            }
+            setError(err instanceof Error ? err.message : 'An unknown error occurred.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className='container'>
-            {/* Display the subject name in the heading */}
-            <h1>Mark Attendance for Class {classId} - Subject </h1>
-            {error && <div className="error">{error}</div>}
-            {success && <div className="success">{success}</div>}
+        <div>
+            <h1>Mark Attendance for Class {classId} - Subject {subname}</h1>
+            {error && <p className="error-message">{error}</p>}
+            {success && <p className="success-message">{success}</p>}
 
-            <label>Select Date:</label>
+            <label htmlFor="attendance-date">Select Date:</label>
             <input
+                id="attendance-date"
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
             />
 
-            {loading && <div>Loading...</div>}
-            {!loading && (
+            {loading ? (
+                <p className="loading-message">Loading...</p>
+            ) : (
                 <div className="attendance-container">
-                    {students.map(student => (
-                        <div key={student.rollno} className="student-row">
-                            <span className="student-name">{student.name}</span>
-                            <input
-                                type="radio"
-                                id={`present-${student.rollno}`}
-                                name={`attendance-${student.rollno}`}
-                                value="Present"
-                                onChange={() => handleAttendanceChange(student.rollno, 'Present')}
-                                checked={attendance.find(record => record.rollno === student.rollno)?.status === 'Present'}
-                            />
-                            <label htmlFor={`present-${student.rollno}`} className="present attendance-label">Present</label>
-                            <input
-                                type="radio"
-                                id={`absent-${student.rollno}`}
-                                name={`attendance-${student.rollno}`}
-                                value="Absent"
-                                onChange={() => handleAttendanceChange(student.rollno, 'Absent')}
-                                checked={attendance.find(record => record.rollno === student.rollno)?.status === 'Absent'}
-                            />
-                            <label htmlFor={`absent-${student.rollno}`} className="absent attendance-label">Absent</label>
-                        </div>
-                    ))}
+                    <div className="attendance-grid">
+    <div className="attendance-header">Roll No</div>
+    <div className="attendance-header">Student Name</div>
+    <div className="attendance-header">Present</div>
+    <div className="attendance-header">Absent</div>
+
+    {students.map((student) => (
+        <React.Fragment key={student.rollno}>
+            <div className="student-row">{student.rollno}</div>
+            <div className="student-row">{student.name}</div>
+            <div className="student-row">
+                <label>
+                    <input
+                        type="radio"
+                        name={`attendance-${student.rollno}`} // Ensure this is unique
+                        value="Present"
+                        onChange={() => handleAttendanceChange(student.rollno, 'Present')}
+                        checked={attendance.find((record) => record.rollno === student.rollno)?.status === 'Present'}
+                        className="radio-button-green"
+                    />
+                </label>
+            </div>
+            <div className="student-row">
+                <label>
+                    <input
+                        type="radio"
+                        name={`attendance-${student.rollno}`} // Ensure this is unique
+                        value="Absent"
+                        onChange={() => handleAttendanceChange(student.rollno, 'Absent')}
+                        checked={attendance.find((record) => record.rollno === student.rollno)?.status === 'Absent'}
+                        className="radio-button-red"
+                    />
+                </label>
+            </div>
+        </React.Fragment>
+    ))}
+</div>
+
                 </div>
             )}
-            <button onClick={submitAttendance} disabled={loading}>Submit Attendance</button>
+
+            <button onClick={submitAttendance} disabled={loading}>
+                Submit Attendance
+            </button>
         </div>
     );
 };

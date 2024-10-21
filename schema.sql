@@ -1,3 +1,5 @@
+USE dbms_microproject;
+
 CREATE TABLE department (
     department_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL
@@ -9,7 +11,9 @@ CREATE TABLE faculty (
     email VARCHAR(255) NOT NULL,
     phone_no VARCHAR(15) NOT NULL,
     dept_id INT,
-    FOREIGN KEY (dept_id) REFERENCES department(department_id)
+    user_id INT,
+    FOREIGN KEY (dept_id) REFERENCES department(department_id),
+    FOREIGN KEY (user_id) REFERENCES users(userid)
 );
 
 CREATE TABLE class (
@@ -35,8 +39,10 @@ CREATE TABLE student (
     phone_no VARCHAR(15) NOT NULL,
     dept_id INT,
     cid INT,
+    user_id INT,
     FOREIGN KEY (dept_id) REFERENCES department(department_id),
-    FOREIGN KEY (cid) REFERENCES class(cid)
+    FOREIGN KEY (cid) REFERENCES class(cid),
+    FOREIGN KEY (user_id) REFERENCES users(userid)
 );
 
 CREATE TABLE timetable (
@@ -70,3 +76,4 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     role ENUM('admin', 'student', 'faculty') NOT NULL
 );
+rollback;

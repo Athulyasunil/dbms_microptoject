@@ -1,0 +1,132 @@
+/* Main profile container */
+.student-profile {
+    padding: 20px;
+    background-color: #f9f9f9; /* Light gray background for the overall profile */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    max-width: 1200px; /* Increase max-width for larger screens */
+    width: 80vw; /* Use viewport width for dynamic sizing on PC */
+    min-width: 600px; /* Set minimum width for medium-sized screens */
+    margin: auto; /* Center the profile container */
+}
+
+/* Individual section containers */
+.profile-container,
+.timetable-container,
+.attendance-container {
+    margin-bottom: 20px; /* Space between sections */
+    padding: 20px; /* Increased padding for better spacing */
+    background-color: #ffffff; /* White background for sections */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    text-align: center; /* Center align text inside */
+    width: 100%; /* Full width to fill parent container */
+}
+
+/* Headings */
+h2, h3 {
+    margin: 10px 0; /* Margin above and below headings */
+    color: #333; /* Dark text color */
+}
+
+/* Timetable container styles */
+.timetable-container {
+    padding: 20px; /* Increased padding for better spacing */
+    width: 100%; /* Full width to fill parent container */
+}
+
+/* Attendance container styles */
+.attendance-container {
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center the button horizontally */
+    width: 100%; /* Make the container take full width */
+    padding: 20px; /* Add some padding for spacing */
+}
+
+/* Attendance button styles */
+.attendance-button {
+    padding: 20px 0; /* Increase padding for a larger button */
+    font-size: 20px; /* Increase font size for button text */
+    background-color: #007bff; /* Primary color for the button */
+    color: white; /* White text color */
+    border: none; /* Remove border */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+    margin-top: 10px; /* Add margin at the top */
+    width: 100%; /* Make the button take up the full container width */
+    text-align: center; /* Ensure text inside button is centered */
+}
+
+/* Button hover effect */
+.attendance-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1024px) {
+    .student-profile {
+        width: 90vw; /* Adjust width for tablets or smaller laptops */
+        min-width: 500px; /* Set a minimum width */
+    }
+}
+
+@media (max-width: 600px) {
+    .student-profile {
+        padding: 10px; /* Less padding on smaller screens */
+        width: 95vw; /* Slightly wider on small screens */
+        min-width: unset; /* Remove min-width for mobile screens */
+    }
+
+    .attendance-button {
+        font-size: 16px; /* Adjust button font size for smaller screens */
+    }
+}
+
+/* Additional styles for accessibility */
+.error {
+    color: red; /* Red color for error messages */
+    text-align: center; /* Centered error messages */
+    font-size: 16px; /* Font size for error messages */
+}
+
+.student-profile {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.profile-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.timetable-container {
+    margin-bottom: 20px;
+}
+
+.attendance-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.attendance-button, .calendar-attendance-button {
+    padding: 15px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Full width of the container */
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.attendance-button:hover, .calendar-attendance-button:hover {
+    background-color: #0056b3;
+}
+

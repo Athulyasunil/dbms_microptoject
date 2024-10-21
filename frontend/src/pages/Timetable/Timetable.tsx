@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import './Timetable.css'
 interface TimetableProps {
     classId: string; // Accept classId as a prop
 }
@@ -44,35 +44,30 @@ const Timetable: React.FC<TimetableProps> = ({ classId }) => {
 
     return (
         <div className="timetable">
-            <h2>Timetable for Class {classId}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Day</th>
-                        <th>Period 1</th>
-                        <th>Period 2</th>
-                        <th>Period 3</th>
-                        <th>Period 4</th>
-                        <th>Period 5</th>
-                        <th>Period 6</th>
-                        <th>Period 7</th>
-                        <th>Period 8</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {days.map(day => (
-                        <tr key={day}>
-                            <td>{day}</td>
-                            {[...Array(8)].map((_, periodIndex) => {
-                                const subject = timetable![day][periodIndex];
-                                return (
-                                    <td key={periodIndex}>{subject || ''}</td> // Render blank if subject is null
-                                );
-                            })}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <h2 className="timetable-heading"> Timetable </h2>
+            <div className="timetable-grid">
+                <div className="table-header">Day</div>
+                <div className="table-header">Period 1</div>
+                <div className="table-header">Period 2</div>
+                <div className="table-header">Period 3</div>
+                <div className="table-header">Period 4</div>
+                <div className="table-header">Period 5</div>
+                <div className="table-header">Period 6</div>
+
+                {days.map(day => (
+                    <>
+                        <div className="table-cell">{day}</div>
+                        {[...Array(6)].map((_, periodIndex) => {
+                            const subject = timetable![day][periodIndex];
+                            return (
+                                <div className="table-cell" key={periodIndex}>
+                                    {subject || ''}
+                                </div>
+                            );
+                        })}
+                    </>
+                ))}
+            </div>
         </div>
     );
 };
